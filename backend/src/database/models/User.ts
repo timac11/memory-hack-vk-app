@@ -1,9 +1,9 @@
-import {Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne} from 'typeorm'
+import {Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, PrimaryColumn} from 'typeorm'
 import {Military} from "./Military";
 
 @Entity("users")
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id!: string;
 
     @Column()
