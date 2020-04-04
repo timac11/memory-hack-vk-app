@@ -1,0 +1,10 @@
+import React from "react";
+import { YMaps, Map } from 'react-yandex-maps';
+
+export const YMap = () => (
+    <YMaps>
+        <div style={{display: "flex", width: "100%", height: "300px", justifyContent: "center"}}>
+            <Map style={{flex: 0.8}} defaultState={{ center: [55.75, 37.57], zoom: 2 }} />
+        </div>
+    </YMaps>
+);
