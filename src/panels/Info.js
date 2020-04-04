@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -11,9 +11,18 @@ import Icon24Document from '@vkontakte/icons/dist/24/document';
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Div from "@vkontakte/vkui/dist/components/Div/Div";
 import Select from "@vkontakte/vkui/dist/components/Select/Select";
+import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
 
-const Info = ({id, go, fetchedUser}) => (
-    <Panel id={id}>
+const Info = ({id, go, fetchedUser}) => {
+    const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setPopout(null);
+        }, 1000);
+    });
+
+    return popout || <Panel id={id}>
         <PanelHeader>Информация о ветеране</PanelHeader>
         {/*{fetchedUser &&
 		<Group title="User Data Fetched with VK Bridge">
@@ -24,6 +33,7 @@ const Info = ({id, go, fetchedUser}) => (
 				{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
 			</Cell>
 		</Group>}*/}
+
 
         <FormLayout>
             <Div style={{display: "flex", justifyContent: "center"}}>
@@ -55,7 +65,7 @@ const Info = ({id, go, fetchedUser}) => (
             <Button onClick={() => go("result")} size="xl">Загрузить информацию</Button>
         </Div>
     </Panel>
-);
+};
 
 Info.propTypes = {
     id: PropTypes.string.isRequired,

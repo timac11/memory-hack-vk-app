@@ -6,6 +6,7 @@ import '@vkontakte/vkui/dist/vkui.css';
 
 import Info from './panels/Info';
 import Result from './panels/Result';
+import {MapResults} from "./panels/MapResults";
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState('home');
@@ -36,6 +37,7 @@ const App = () => {
 		<View activePanel={activePanel} popout={popout}>
 			<Info id='home' fetchedUser={fetchedUser} go={go} />
 			<Result id='result' go={go} />
+			<MapResults id='mapResults' go={go}/>
 		</View>
 	);
 }
