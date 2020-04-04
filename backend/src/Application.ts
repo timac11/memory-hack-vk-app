@@ -16,7 +16,7 @@ export default class Application {
           "port": 5432,
           "username": "postgres",
           "password": "postgres",
-          "database": "marketplace",
+          "database": "memoryHack",
           "synchronize": true,
           "logging": false,
           "entities": [

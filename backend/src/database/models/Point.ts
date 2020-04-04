@@ -16,6 +16,6 @@ export class Point extends BaseEntity {
     @Column()
     yPoint!: number;
 
-    @ManyToOne(() => P)
-    military: Military;
+    @ManyToOne(() => Point, point => point.military)
+    military!: Military;
 }
