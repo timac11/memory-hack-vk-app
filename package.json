@@ -20,6 +20,7 @@
   "dependencies": {
     "@vkontakte/icons": "^1.20.1",
     "@vkontakte/vk-bridge": "^2.1.6",
+    "@vkontakte/vk-connect": "^1.9.1",
     "@vkontakte/vk-miniapps-deploy": "0.0.17",
     "@vkontakte/vkui": "^3.5.7",
     "axios": "^0.19.2",
