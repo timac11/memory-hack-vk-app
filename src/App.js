@@ -32,7 +32,7 @@ const App = () => {
     const go = id => {
         setActivePanel(id);
     };
-    debugger
+
     return (
         <View activePanel={activePanel}>
             <Info id='home' fetchedUser={fetchedUser} go={go}/>
