@@ -147,7 +147,7 @@ const Info = props => {
 Info.propTypes = {
     id: PropTypes.string.isRequired,
     go: PropTypes.func.isRequired,
-    fetchedUser: PropTypes.object.isRequired
+    fetchedUser: PropTypes.object
 };
 
 export default Info;
