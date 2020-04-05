@@ -18,6 +18,7 @@ export class BaseController {
     router.get(`${namespace}/user/:id`, this.getUser.bind(this));
     router.get(`${namespace}/matched/:id`, this.getAggregatedInfo.bind(this));
     router.get(`${namespace}/militaryUnits`, this.getMilitaryUnits.bind(this));
+    router.get(`${namespace}/points/:userId`, this.getPointsByUser.bind(this));
     router.post("postUser",`${namespace}/user`, koaBody(), this.postUser.bind(this));
     router.get(`${namespace}/hello`, (ctx: Router.IRouterContext) => {
       this.setCorsHeaders(ctx);
@@ -62,6 +63,15 @@ export class BaseController {
       user,
       matched: users
     }
+  }
+
+  async getPointsByUser(ctx: Router.IRouterContext) {
+    this.setCorsHeaders(ctx);
+    const userId: string = ctx.params.userId;
+    const user: User = await this.db.service.userRepository.findOneOrFail({id: userId});
+    ctx.response.body = {
+      points: MILITARY_UNITS.filter((unit) => unit.id === user.military)[0].points
+    };
   }
 
   getMilitaryUnits(ctx: Router.IRouterContext) {

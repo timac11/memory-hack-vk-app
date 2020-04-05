@@ -23,7 +23,7 @@ const Info = props => {
         name: "",
         surName: "",
         patronymic: "",
-        military: "1",
+        military: "26 танковая бригада (26 тбр)",
         img: null
     });
     const [militaryUnits, setMilitaryUnits] = useState([]);

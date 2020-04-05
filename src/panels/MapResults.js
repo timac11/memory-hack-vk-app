@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Group from "@vkontakte/vkui/dist/components/Group/Group";
 import Header from "@vkontakte/vkui/dist/components/Header/Header";
 import {YMap} from "../YMap";
@@ -12,10 +12,24 @@ import connect from '@vkontakte/vk-connect';
 
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
+import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
+import {get} from "../ApiProvider";
 
 const osName = platform();
 
 export const MapResults = props => {
+    const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
+    const [points, setPoints] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    if (!isLoaded) {
+        get("points/" + props.fetchedUser.id).then((response) => {
+            setPoints(response.data.points.map(point => [point.x, point.y]));
+            setPopout(null);
+            setIsLoaded(true);
+        });
+    }
+
     const vkPost = () => {
         const info = {};
         const {fetchedUser} = props;
@@ -40,13 +54,16 @@ export const MapResults = props => {
         >
             Совпадение
         </PanelHeader>
-        <Group style={{paddingBottom: 8}} header={<Header mode="secondary">Карта передвижения</Header>}>
-            <YMap/>
-        </Group>
-
+        {popout ||
         <Div>
-            <Button onClick={() => vkPost()} size="xl">Опубликовать на стене</Button>
+            <Group style={{paddingBottom: 8}} header={<Header mode="secondary">Карта передвижения</Header>}>
+                <YMap points={points}/>
+            </Group>
+            <Div>
+                <Button onClick={() => vkPost()} size="xl">Опубликовать на стене</Button>
+            </Div>
         </Div>
+        }
     </Panel>
 };
 
