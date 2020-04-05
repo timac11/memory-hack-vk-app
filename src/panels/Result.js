@@ -6,7 +6,6 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
-import Icon24User from '@vkontakte/icons/dist/24/user';
 
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Group from "@vkontakte/vkui/dist/components/Group/Group";
@@ -60,7 +59,18 @@ const Result = props => {
     };
 
     const getParentMatched = () => {
-
+        return <HorizontalScroll>
+            <div style={{display: 'flex'}}>
+                {users.map((u) => {
+                    return <div style={{...itemStyle, paddingLeft: 4}}>
+                        <img src={u.img} style={{width: 64, height: 64, borderRadius: "50%"}}></img>
+                        <div style={{textAlign: "center"}}>
+                            {u.name} {u.surName}
+                        </div>
+                    </div>
+                })}
+            </div>
+        </HorizontalScroll>
     };
 
     if (!isLoaded) {
@@ -106,10 +116,12 @@ const Result = props => {
                     </Cell>
                 </List>
             </Group>
-            <Group style={{paddingBottom: 8}} header={<Header mode="secondary">Совпадение</Header>}>
+            <Group style={{paddingBottom: 8}} header={<Header mode="secondary">Совпадение с друзьями</Header>}>
                 {getUserMatched()}
             </Group>
-
+            <Group style={{paddingBottom: 8}} header={<Header mode="secondary">Родственники</Header>}>
+                {getParentMatched()}
+            </Group>
             <Div>
                 <Button onClick={() => props.go("mapResults")} size="xl">Посмотреть информацию</Button>
             </Div>
