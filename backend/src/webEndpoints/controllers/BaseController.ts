@@ -16,6 +16,7 @@ export class BaseController {
     const namespace = `/api`;
 
     router.get(`${namespace}/user/:id`, this.getUser.bind(this));
+    router.get(`${namespace}/matched/:id`, this.getAggregatedInfo.bind(this));
     router.get(`${namespace}/militaryUnits`, this.getMilitaryUnits.bind(this));
     router.post("postUser",`${namespace}/user`, koaBody(), this.postUser.bind(this));
     router.get(`${namespace}/hello`, (ctx: Router.IRouterContext) => {
@@ -49,6 +50,17 @@ export class BaseController {
       await this.db.service.userRepository.update({id: user. id}, user);
     } else {
       await this.db.service.userRepository.save(user);
+    }
+  }
+
+  async getAggregatedInfo(ctx: Router.IRouterContext) {
+    this.setCorsHeaders(ctx);
+    const userId: string = ctx.params.id;
+    const user: User = await this.db.service.userRepository.findOneOrFail({id: userId});
+    const users: User[] = (await this.db.service.userRepository.find({where: {military: user.military}})).filter((u: User) => u.id != user.id);
+    ctx.response.body = {
+      user,
+      matched: users
     }
   }
 

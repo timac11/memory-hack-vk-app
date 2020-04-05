@@ -41,11 +41,32 @@ const Result = props => {
         patronymic: "",
         military: "1"
     });
+    const [users, setUsers] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
+    const getUserMatched = () => {
+        return <HorizontalScroll>
+            <div style={{display: 'flex'}}>
+                {users.map((u) => {
+                    return <div style={{...itemStyle, paddingLeft: 4}}>
+                        <Avatar src={u.userImgLink} size={64}></Avatar>
+                        <div style={{textAlign: "center"}}>
+                            {u.userName} {u.userSurName}
+                        </div>
+                    </div>
+                })}
+            </div>
+        </HorizontalScroll>
+    };
+
+    const getParentMatched = () => {
+
+    };
+
     if (!isLoaded) {
-        get("user/" + props.fetchedUser.id).then((response) => {
-            setUser(response.data);
+        get("matched/" + props.fetchedUser.id).then((response) => {
+            setUser(response.data.user);
+            setUsers(response.data.matched);
             setPopout(null);
             setIsLoaded(true);
         });
@@ -86,42 +107,7 @@ const Result = props => {
                 </List>
             </Group>
             <Group style={{paddingBottom: 8}} header={<Header mode="secondary">Совпадение</Header>}>
-                <HorizontalScroll>
-                    <div style={{display: 'flex'}}>
-                        <div style={{...itemStyle, paddingLeft: 4}}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Элджей
-                        </div>
-                        <div style={itemStyle}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Ольга
-                        </div>
-                        <div style={itemStyle}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Сергей
-                        </div>
-                        <div style={itemStyle}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Илья
-                        </div>
-                        <div style={itemStyle}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Алексей
-                        </div>
-                        <div style={itemStyle}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Костя
-                        </div>
-                        <div style={itemStyle}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Миша
-                        </div>
-                        <div style={{...itemStyle, paddingRight: 4}}>
-                            <Avatar size={64} style={{marginBottom: 8}}><Icon24User/></Avatar>
-                            Вадим
-                        </div>
-                    </div>
-                </HorizontalScroll>
+                {getUserMatched()}
             </Group>
 
             <Div>
