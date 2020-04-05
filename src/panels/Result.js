@@ -47,8 +47,8 @@ const Result = props => {
     const getUserMatched = () => {
         return <HorizontalScroll>
             <div style={{display: 'flex'}}>
-                {users.map((u) => {
-                    return <div style={{...itemStyle, paddingLeft: 4}}>
+                {users.map((u, index) => {
+                    return <div key={index} style={{...itemStyle, paddingLeft: 4}}>
                         <Avatar src={u.userImgLink} size={64}></Avatar>
                         <div style={{textAlign: "center"}}>
                             {u.userName} {u.userSurName}
@@ -62,8 +62,8 @@ const Result = props => {
     const getParentMatched = () => {
         return <HorizontalScroll>
             <div style={{display: 'flex'}}>
-                {users.map((u) => {
-                    return <div style={{...itemStyle, paddingLeft: 4}}>
+                {users.map((u, index) => {
+                    return <div key={index} style={{...itemStyle, paddingLeft: 4}}>
                         <img src={u.img} style={{width: 64, height: 64, borderRadius: "50%"}}></img>
                         <div style={{textAlign: "center"}}>
                             {u.name} {u.surName}

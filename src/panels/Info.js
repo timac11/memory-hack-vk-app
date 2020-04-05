@@ -63,6 +63,7 @@ const Info = props => {
                      height="200" alt="Нет фотографии, пожалуйста, загрузите"/>
             </Div>
             <File before={<Icon24Document/>}
+                  accept="image/*"
                   onChange={(e) => {
                       toBase64(e.target.files[0]).then((result) => setUser({...user, img: result}))
                   }}
