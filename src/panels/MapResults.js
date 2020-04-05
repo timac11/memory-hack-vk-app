@@ -36,5 +36,5 @@ export const MapResults = props => {
 MapResults.propTypes = {
     id: PropTypes.string.isRequired,
     go: PropTypes.func.isRequired,
-    userId: PropTypes.string.isRequired
+    fetchedUser: PropTypes.object
 };

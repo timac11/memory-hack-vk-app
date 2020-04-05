@@ -12,29 +12,39 @@ import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Div from "@vkontakte/vkui/dist/components/Div/Div";
 import Select from "@vkontakte/vkui/dist/components/Select/Select";
 import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
-import {API_URL} from "../API_CONFIG";
-const axios = require('axios').default;
+import {get, post} from "../ApiProvider";
 
-const Info = ({id, go}) => {
-    const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+const Info = props => {
+    const {id, go, fetchedUser} = props;
+    const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
     const [user, setUser] = useState({
+        id: fetchedUser && fetchedUser.id,
         name: "",
-        surname: "",
-        patronymic: ""
+        surName: "",
+        patronymic: "",
+        military: "1"
     });
     const [militaryUnits, setMilitaryUnits] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    useEffect(() => {
-
-        axios.get(API_URL + "militaryUnits").then(async (response) => {
+    if (!isLoaded) {
+        get("militaryUnits").then((response) => {
             setMilitaryUnits(response.data.units);
             setPopout(null);
+            setIsLoaded(true);
         });
-    });
+    }
+
+    const postUser = () => {
+        setPopout(<ScreenSpinner size='large'/>);
+        post("user", {...user, id: fetchedUser.id}).then(() => {
+            setPopout(null);
+            go("result");
+        })
+    };
 
     return popout || <Panel id={id}>
         <PanelHeader>Информация о ветеране</PanelHeader>
-
         <FormLayout>
             <Div style={{display: "flex", justifyContent: "center"}}>
                 <img align="center" className="page_avatar_img"
@@ -49,27 +59,41 @@ const Info = ({id, go}) => {
                 <FormLayoutGroup top="ФИО">
                     <Input type="text"
                            placeholder="Фамилия"
-                           value={user && user.surname}
-                           onChange={(e) => {setUser({...user, surname: e.target.value})}}/>
+                           value={user && user.surName}
+                           onChange={(e) => {
+                               setUser({...user, surName: e.target.value})
+                           }}
+                    />
                     <Input type="text"
                            placeholder="Имя"
                            value={user && user.name}
-                           onChange={(e) => {setUser({...user, name: e.target.value})}}/>
+                           onChange={(e) => {
+                               setUser({...user, name: e.target.value})
+                           }}
+                    />
                     <Input type="text"
                            placeholder="Отчество"
                            value={user && user.patronymic}
-                           onChange={(e) => {setUser({...user, patronymic: e.target.value})}}/>
+                           onChange={(e) => {
+                               setUser({...user, patronymic: e.target.value})
+                           }}
+                    />
                 </FormLayoutGroup>
                 <FormLayoutGroup top="Служба">
-                    <Select placeholder="Воинская часть">
-                        {militaryUnits.map((unit) => <option value={unit.id}>{unit.name}</option>)}
+                    <Select placeholder="Воинская часть"
+                            value={user && user.military}
+                            onChange={(e) => {
+                                setUser({...user, military: e.target.value})
+                            }}
+                    >
+                        {militaryUnits.map((unit) => <option key={unit.id} value={unit.id}>{unit.name}</option>)}
                     </Select>
                 </FormLayoutGroup>
             </FormLayout>
         </Group>
 
         <Div>
-            <Button onClick={() => go("result")} size="xl">Загрузить информацию</Button>
+            <Button onClick={() => postUser()} size="xl">Загрузить информацию</Button>
         </Div>
     </Panel>
 };
@@ -77,7 +101,7 @@ const Info = ({id, go}) => {
 Info.propTypes = {
     id: PropTypes.string.isRequired,
     go: PropTypes.func.isRequired,
-    userId: PropTypes.string.isRequired
+    fetchedUser: PropTypes.object.isRequired
 };
 
 export default Info;

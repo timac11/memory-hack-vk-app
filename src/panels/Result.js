@@ -97,7 +97,7 @@ const Result = props => {
 Result.propTypes = {
     id: PropTypes.string.isRequired,
     go: PropTypes.func.isRequired,
-    userId: PropTypes.string.isRequired
+    fetchedUser: PropTypes.object
 };
 
 export default Result;

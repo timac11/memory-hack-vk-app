@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
@@ -9,37 +9,37 @@ import Result from './panels/Result';
 import {MapResults} from "./panels/MapResults";
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState('home');
-	const [fetchedUser, setUser] = useState(null);
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+    const [activePanel, setActivePanel] = useState('home');
+    const [fetchedUser, setUser] = useState(null);
 
-	useEffect(() => {
-		bridge.subscribe(({ detail: { type, data }}) => {
-			if (type === 'VKWebAppUpdateConfig') {
-				const schemeAttribute = document.createAttribute('scheme');
-				schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
-				document.body.attributes.setNamedItem(schemeAttribute);
-			}
-		});
-		async function fetchData() {
-			const user = await bridge.send('VKWebAppGetUserInfo');
-			setUser(user);
-			setPopout(null);
-		}
-		fetchData();
-	}, []);
+    useEffect(() => {
+        bridge.subscribe(({detail: {type, data}}) => {
+            if (type === 'VKWebAppUpdateConfig') {
+                const schemeAttribute = document.createAttribute('scheme');
+                schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
+                document.body.attributes.setNamedItem(schemeAttribute);
+            }
+        });
 
-	const go = id => {
-		setActivePanel(id);
-	};
+        async function fetchData() {
+            const user = await bridge.send('VKWebAppGetUserInfo');
+            setUser(user);
+        }
 
-	return (
-		<View activePanel={activePanel} popout={popout}>
-			<Info id='home' go={go} userId={fetchedUser && fetchedUser.id}/>
-			<Result id='result' go={go} userId={fetchedUser && fetchedUser.id}/>
-			<MapResults id='mapResults' go={go} userId={fetchedUser && fetchedUser.id}/>
-		</View>
-	);
+        fetchData();
+    }, []);
+
+    const go = id => {
+        setActivePanel(id);
+    };
+    debugger
+    return (
+        <View activePanel={activePanel}>
+            <Info id='home' fetchedUser={fetchedUser} go={go}/>
+            <Result id='result' go={go} fetchedUser={fetchedUser}/>
+            <MapResults id='mapResults' go={go} fetchedUser={fetchedUser}/>
+        </View>
+    );
 }
 
 export default App;

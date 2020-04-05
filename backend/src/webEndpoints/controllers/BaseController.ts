@@ -17,7 +17,7 @@ export class BaseController {
 
     router.get(`${namespace}/user/:id`, this.getUser.bind(this));
     router.get(`${namespace}/militaryUnits`, this.getMilitaryUnits.bind(this));
-    router.post(`${namespace}/user`, koaBody(), this.postUser.bind(this));
+    router.post("postUser",`${namespace}/user`, koaBody(), this.postUser.bind(this));
     router.get(`${namespace}/hello`, (ctx: Router.IRouterContext) => {
       this.setCorsHeaders(ctx);
       ctx.response.body = 'Hello!';
@@ -44,8 +44,8 @@ export class BaseController {
 
   async postUser(ctx: Router.IRouterContext) {
     this.setCorsHeaders(ctx);
-    const user: User = ctx.request.body.user;
-    console.log(user);
+    const user: User = ctx.request.body;
+    await this.db.service.userRepository.save(user);
   }
 
   getMilitaryUnits(ctx: Router.IRouterContext) {

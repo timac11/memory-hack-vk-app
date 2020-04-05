@@ -10,14 +10,11 @@ export class User extends BaseEntity {
     name!: string;
 
     @Column()
+    patronymic!: string;
+
+    @Column()
     surName!: string;
 
     @Column()
-    place!: string;
-
-    @Column()
-    militaryDate!: Date;
-
-    @OneToOne(type => Military)
-    military!: Military;
+    military!: string;
 }

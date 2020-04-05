@@ -4,6 +4,7 @@ import {BaseController} from "./controllers/BaseController";
 import bodyParser = require("koa-bodyparser");
 import koaLogger = require('koa-logger');
 import NodeDatabase from "../database/NodeDatabase";
+const cors = require('@koa/cors');
 
 export default class WebServer {
     private readonly port: number;
@@ -29,6 +30,7 @@ export default class WebServer {
     private configureRouters (): void {
         const controller = new BaseController(this.db);
         const router = controller.router();
+        this.app.use(cors())
         this.app.use(router.routes()).use(router.allowedMethods());
     }
 
