@@ -14,6 +14,7 @@ import Select from "@vkontakte/vkui/dist/components/Select/Select";
 import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
 import {get, post} from "../ApiProvider";
 import {toBase64} from "../utils";
+import FormStatus from "@vkontakte/vkui/dist/components/FormStatus/FormStatus";
 
 const Info = props => {
     const {id, go, fetchedUser} = props;
@@ -29,6 +30,7 @@ const Info = props => {
     });
     const [militaryUnits, setMilitaryUnits] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [status, setStatus] = useState("error");
 
     if (!isLoaded) {
         get("militaryUnits").then((response) => {
@@ -37,6 +39,17 @@ const Info = props => {
             setIsLoaded(true);
         });
     }
+
+    const validate = (user) => {
+        if (user.name && user.name !== "" &&
+            user.surName && user.surName !== "" &&
+            user.patronymic && user.patronymic !== "" &&
+            user.city && user.city !== "" && user.img) {
+            setStatus("default");
+        } else {
+            setStatus("error");
+        }
+    };
 
     const postUser = () => {
         setPopout(<ScreenSpinner size='large'/>);
@@ -65,7 +78,7 @@ const Info = props => {
             <File before={<Icon24Document/>}
                   accept="image/*"
                   onChange={(e) => {
-                      toBase64(e.target.files[0]).then((result) => setUser({...user, img: result}))
+                      toBase64(e.target.files[0]).then((result) => {setUser({...user, img: result}); validate({...user, img: result})});
                   }}
                   controlSize="xl"
                   mode="secondary"
@@ -74,33 +87,40 @@ const Info = props => {
 
         <Group title="Базовая информация">
             <FormLayout>
+                <FormStatus header="Некорректно введены данные" hidden={status === "default"} mode={status}>
+                    Необходимо заполните все поля и загрузите фото
+                </FormStatus>
                 <FormLayoutGroup top="ФИО">
                     <Input type="text"
                            placeholder="Фамилия"
                            value={user && user.surName}
                            onChange={(e) => {
-                               setUser({...user, surName: e.target.value})
+                               setUser({...user, surName: e.target.value});
+                               validate({...user, surName: e.target.value});
                            }}
                     />
                     <Input type="text"
                            placeholder="Имя"
                            value={user && user.name}
                            onChange={(e) => {
-                               setUser({...user, name: e.target.value})
+                               setUser({...user, name: e.target.value});
+                               validate({...user, name: e.target.value});
                            }}
                     />
                     <Input type="text"
                            placeholder="Отчество"
                            value={user && user.patronymic}
                            onChange={(e) => {
-                               setUser({...user, patronymic: e.target.value})
+                               setUser({...user, patronymic: e.target.value});
+                               validate({...user, patronymic: e.target.value});
                            }}
                     />
                     <Input type="text"
                            placeholder="Родной город"
                            value={user && user.city}
                            onChange={(e) => {
-                               setUser({...user, city: e.target.value})
+                               setUser({...user, city: e.target.value});
+                               validate({...user, city: e.target.value});
                            }}
                     />
                 </FormLayoutGroup>
@@ -108,7 +128,8 @@ const Info = props => {
                     <Select placeholder="Воинская часть"
                             value={user && user.military}
                             onChange={(e) => {
-                                setUser({...user, military: e.target.value})
+                                setUser({...user, military: e.target.value});
+                                validate({...user, military: e.target.value});
                             }}
                     >
                         {militaryUnits.map((unit) => <option key={unit.id} value={unit.id}>{unit.name}</option>)}
@@ -118,7 +139,7 @@ const Info = props => {
         </Group>
 
         <Div>
-            <Button onClick={() => postUser()} size="xl">Загрузить информацию</Button>
+            <Button disabled={status === "error"} onClick={() => postUser()} size="xl">Загрузить информацию</Button>
         </Div>
     </Panel>
 };
