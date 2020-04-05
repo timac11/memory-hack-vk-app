@@ -88,7 +88,7 @@ const Info = props => {
         <Group title="Базовая информация">
             <FormLayout>
                 <FormStatus header="Некорректно введены данные" hidden={status === "default"} mode={status}>
-                    Необходимо заполнить все поля и загрузите фото
+                    Необходимо заполнить все поля и загрузить фото
                 </FormStatus>
                 <FormLayoutGroup top="ФИО">
                     <Input type="text"
