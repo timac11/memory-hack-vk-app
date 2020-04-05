@@ -13,6 +13,7 @@ import Div from "@vkontakte/vkui/dist/components/Div/Div";
 import Select from "@vkontakte/vkui/dist/components/Select/Select";
 import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
 import {get, post} from "../ApiProvider";
+import {toBase64} from "../utils";
 
 const Info = props => {
     const {id, go, fetchedUser} = props;
@@ -22,7 +23,8 @@ const Info = props => {
         name: "",
         surName: "",
         patronymic: "",
-        military: "1"
+        military: "1",
+        img: null
     });
     const [militaryUnits, setMilitaryUnits] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -37,7 +39,15 @@ const Info = props => {
 
     const postUser = () => {
         setPopout(<ScreenSpinner size='large'/>);
-        post("user", {...user, id: fetchedUser.id}).then(() => {
+        post("user", {
+                ...user, ...{
+                    id: fetchedUser.id,
+                    userName: fetchedUser.first_name,
+                    userSurName: fetchedUser.last_name,
+                    userImgLink: fetchedUser.photo_200
+                }
+            }
+        ).then(() => {
             setPopout(null);
             go("result");
         })
@@ -48,10 +58,16 @@ const Info = props => {
         <FormLayout>
             <Div style={{display: "flex", justifyContent: "center"}}>
                 <img align="center" className="page_avatar_img"
-                     src="https://sun1-19.userapi.com/c855616/v855616091/2b491/Cr4UI-ECoKg.jpg?ava=1" width="200"
-                     height="200" alt=""/>
+                     src={user.img} width="200"
+                     height="200" alt="Нет фотографии, пожалуйста, загрузите"/>
             </Div>
-            <File before={<Icon24Document/>} controlSize="xl" mode="secondary"/>
+            <File before={<Icon24Document/>}
+                  onChange={(e) => {
+                      toBase64(e.target.files[0]).then((result) => setUser({...user, img: result}))
+                  }}
+                  controlSize="xl"
+                  mode="secondary"
+            />
         </FormLayout>
 
         <Group title="Базовая информация">

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {IOS, platform} from '@vkontakte/vkui';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -15,6 +15,10 @@ import Header from "@vkontakte/vkui/dist/components/Header/Header";
 import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
 import Div from "@vkontakte/vkui/dist/components/Div/Div";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
+import List from "@vkontakte/vkui/dist/components/List/List";
+import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
+import InfoRow from "@vkontakte/vkui/dist/components/InfoRow/InfoRow";
+import {get} from "../ApiProvider";
 
 const osName = platform();
 
@@ -30,12 +34,22 @@ const itemStyle = {
 
 const Result = props => {
     const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setPopout(null);
-        }, 1000);
+    const [user, setUser] = useState({
+        id: props.fetchedUser && props.fetchedUser.id,
+        name: "",
+        surName: "",
+        patronymic: "",
+        military: "1"
     });
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    if (!isLoaded) {
+        get("user/" + props.fetchedUser.id).then((response) => {
+            setUser(response.data);
+            setPopout(null);
+            setIsLoaded(true);
+        });
+    }
 
     return <Panel id={props.id}>
         <PanelHeader
@@ -47,6 +61,30 @@ const Result = props => {
         </PanelHeader>
         {popout ||
         <Div>
+            <Div style={{display: "flex", justifyContent: "center"}}>
+                <img align="center" className="page_avatar_img"
+                     src={user.img} width="200"
+                     height="200" alt=""/>
+            </Div>
+            <Group header={<Header mode="secondary">Информация о ветеране</Header>}>
+                <List>
+                    <Cell>
+                        <InfoRow header="ФИО">
+                            {user.surName} {user.name} {user.patronymic}
+                        </InfoRow>
+                    </Cell>
+                    <Cell>
+                        <InfoRow header="Родной город">
+                            Ереван
+                        </InfoRow>
+                    </Cell>
+                    <Cell>
+                        <InfoRow header="Воинская часть">
+                            {user.military}
+                        </InfoRow>
+                    </Cell>
+                </List>
+            </Group>
             <Group style={{paddingBottom: 8}} header={<Header mode="secondary">Совпадение</Header>}>
                 <HorizontalScroll>
                     <div style={{display: 'flex'}}>

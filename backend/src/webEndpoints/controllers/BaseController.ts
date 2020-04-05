@@ -12,7 +12,7 @@ export class BaseController {
   }
 
   public router(): Router {
-    const router = new Router()
+    const router = new Router();
     const namespace = `/api`;
 
     router.get(`${namespace}/user/:id`, this.getUser.bind(this));
@@ -36,7 +36,6 @@ export class BaseController {
   async getUser(ctx: Router.IRouterContext) {
     this.setCorsHeaders(ctx);
     const userId: string = ctx.params.id;
-    console.log(`userId: ${userId}`);
     const user: User | undefined = await this.db.service.userRepository.findOne({id: userId});
     ctx.response.status = 200;
     ctx.response.body = user || {};
@@ -45,7 +44,12 @@ export class BaseController {
   async postUser(ctx: Router.IRouterContext) {
     this.setCorsHeaders(ctx);
     const user: User = ctx.request.body;
-    await this.db.service.userRepository.save(user);
+    const foundUser: User | undefined = await this.db.service.userRepository.findOne({id: user. id});
+    if (foundUser) {
+      await this.db.service.userRepository.update({id: user. id}, user);
+    } else {
+      await this.db.service.userRepository.save(user);
+    }
   }
 
   getMilitaryUnits(ctx: Router.IRouterContext) {

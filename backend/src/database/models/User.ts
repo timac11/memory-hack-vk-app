@@ -10,6 +10,18 @@ export class User extends BaseEntity {
     name!: string;
 
     @Column()
+    img!: string;
+
+    @Column()
+    userName!: string;
+
+    @Column()
+    userSurName!: string;
+
+    @Column()
+    userImgLink!: string;
+
+    @Column()
     patronymic!: string;
 
     @Column()
