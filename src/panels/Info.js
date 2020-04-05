@@ -26,7 +26,7 @@ const Info = props => {
         patronymic: "",
         city: "",
         military: "26 танковая бригада (26 тбр)",
-        img: null
+        img: "https://vk.com/images/camera_200.png?ava=1"
     });
     const [militaryUnits, setMilitaryUnits] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -44,7 +44,7 @@ const Info = props => {
         if (user.name && user.name !== "" &&
             user.surName && user.surName !== "" &&
             user.patronymic && user.patronymic !== "" &&
-            user.city && user.city !== "" && user.img) {
+            user.city && user.city !== "" && user.img && user.img !== "https://vk.com/images/camera_200.png?ava=1") {
             setStatus("default");
         } else {
             setStatus("error");
@@ -73,7 +73,7 @@ const Info = props => {
             <Div style={{display: "flex", justifyContent: "center"}}>
                 <img align="center" className="page_avatar_img"
                      src={user.img} width="200"
-                     height="200" alt="Нет фотографии, пожалуйста, загрузите"/>
+                     height="200"/>
             </Div>
             <File before={<Icon24Document/>}
                   accept="image/*"
