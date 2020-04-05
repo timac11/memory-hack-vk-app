@@ -23,6 +23,7 @@ const Info = props => {
         name: "",
         surName: "",
         patronymic: "",
+        city: "",
         military: "26 танковая бригада (26 тбр)",
         img: null
     });
@@ -92,6 +93,13 @@ const Info = props => {
                            value={user && user.patronymic}
                            onChange={(e) => {
                                setUser({...user, patronymic: e.target.value})
+                           }}
+                    />
+                    <Input type="text"
+                           placeholder="Родной город"
+                           value={user && user.city}
+                           onChange={(e) => {
+                               setUser({...user, city: e.target.value})
                            }}
                     />
                 </FormLayoutGroup>

@@ -37,6 +37,7 @@ const Result = props => {
         id: props.fetchedUser && props.fetchedUser.id,
         name: "",
         surName: "",
+        city: "",
         patronymic: "",
         military: "1"
     });
@@ -106,7 +107,7 @@ const Result = props => {
                     </Cell>
                     <Cell>
                         <InfoRow header="Родной город">
-                            Ереван
+                            {user.city || "-"}
                         </InfoRow>
                     </Cell>
                     <Cell>

@@ -48,7 +48,7 @@ export const MapResults = props => {
 
     return <Panel id={props.id}>
         <PanelHeader
-            left={<PanelHeaderButton onClick={props.go} data-to="home">
+            left={<PanelHeaderButton onClick={() => props.go("home")} data-to="home">
                 {osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
             </PanelHeaderButton>}
         >
