@@ -8,8 +8,6 @@ import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon24User from '@vkontakte/icons/dist/24/user';
 
-import './Persik.css';
-import {YMap} from "../YMap";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Group from "@vkontakte/vkui/dist/components/Group/Group";
 import HorizontalScroll from "@vkontakte/vkui/dist/components/HorizontalScroll/HorizontalScroll";
@@ -99,6 +97,7 @@ const Result = props => {
 Result.propTypes = {
     id: PropTypes.string.isRequired,
     go: PropTypes.func.isRequired,
+    userId: PropTypes.string.isRequired
 };
 
 export default Result;

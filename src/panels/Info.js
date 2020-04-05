@@ -12,28 +12,28 @@ import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Div from "@vkontakte/vkui/dist/components/Div/Div";
 import Select from "@vkontakte/vkui/dist/components/Select/Select";
 import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
+import {API_URL} from "../API_CONFIG";
+const axios = require('axios').default;
 
-const Info = ({id, go, fetchedUser}) => {
+const Info = ({id, go}) => {
     const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+    const [user, setUser] = useState({
+        name: "",
+        surname: "",
+        patronymic: ""
+    });
+    const [militaryUnits, setMilitaryUnits] = useState([]);
 
     useEffect(() => {
-        setTimeout(() => {
+
+        axios.get(API_URL + "militaryUnits").then(async (response) => {
+            setMilitaryUnits(response.data.units);
             setPopout(null);
-        }, 1000);
+        });
     });
 
     return popout || <Panel id={id}>
         <PanelHeader>Информация о ветеране</PanelHeader>
-        {/*{fetchedUser &&
-		<Group title="User Data Fetched with VK Bridge">
-			<Cell
-				before={fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200}/> : null}
-				description={fetchedUser.city && fetchedUser.city.title ? fetchedUser.city.title : ''}
-			>
-				{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
-			</Cell>
-		</Group>}*/}
-
 
         <FormLayout>
             <Div style={{display: "flex", justifyContent: "center"}}>
@@ -47,16 +47,23 @@ const Info = ({id, go, fetchedUser}) => {
         <Group title="Базовая информация">
             <FormLayout>
                 <FormLayoutGroup top="ФИО">
-                    <Input type="text" placeholder="Фамилия"/>
-                    <Input type="text" placeholder="Имя"/>
-                    <Input type="text" placeholder="Отчество"/>
+                    <Input type="text"
+                           placeholder="Фамилия"
+                           value={user && user.surname}
+                           onChange={(e) => {setUser({...user, surname: e.target.value})}}/>
+                    <Input type="text"
+                           placeholder="Имя"
+                           value={user && user.name}
+                           onChange={(e) => {setUser({...user, name: e.target.value})}}/>
+                    <Input type="text"
+                           placeholder="Отчество"
+                           value={user && user.patronymic}
+                           onChange={(e) => {setUser({...user, patronymic: e.target.value})}}/>
                 </FormLayoutGroup>
                 <FormLayoutGroup top="Служба">
                     <Select placeholder="Воинская часть">
-                        <option value="m">Часть 1</option>
-                        <option value="f">Часть 2</option>
+                        {militaryUnits.map((unit) => <option value={unit.id}>{unit.name}</option>)}
                     </Select>
-                    <Input type="date" placeholder="Дата поступления на службу"/>
                 </FormLayoutGroup>
             </FormLayout>
         </Group>
@@ -70,14 +77,7 @@ const Info = ({id, go, fetchedUser}) => {
 Info.propTypes = {
     id: PropTypes.string.isRequired,
     go: PropTypes.func.isRequired,
-    fetchedUser: PropTypes.shape({
-        photo_200: PropTypes.string,
-        first_name: PropTypes.string,
-        last_name: PropTypes.string,
-        city: PropTypes.shape({
-            title: PropTypes.string,
-        }),
-    }),
+    userId: PropTypes.string.isRequired
 };
 
 export default Info;

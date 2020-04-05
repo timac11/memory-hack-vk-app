@@ -1,6 +1,8 @@
 import * as Router from 'koa-router'
 import NodeDatabase from "../../database/NodeDatabase";
 import {User} from "../../database/models";
+import koaBody = require("koa-body");
+import {MILITARY_UNITS} from "../mocks/militaryUnits";
 
 export class BaseController {
   public readonly db: NodeDatabase;
@@ -14,7 +16,8 @@ export class BaseController {
     const namespace = `/api`;
 
     router.get(`${namespace}/user/:id`, this.getUser.bind(this));
-
+    router.get(`${namespace}/militaryUnits`, this.getMilitaryUnits.bind(this));
+    router.post(`${namespace}/user`, koaBody(), this.postUser.bind(this));
     router.get(`${namespace}/hello`, (ctx: Router.IRouterContext) => {
       this.setCorsHeaders(ctx);
       ctx.response.body = 'Hello!';
@@ -31,10 +34,22 @@ export class BaseController {
   }
 
   async getUser(ctx: Router.IRouterContext) {
+    this.setCorsHeaders(ctx);
     const userId: string = ctx.params.id;
-    console.log(`userId: ${userId}`)
+    console.log(`userId: ${userId}`);
     const user: User | undefined = await this.db.service.userRepository.findOne({id: userId});
     ctx.response.status = 200;
     ctx.response.body = user || {};
+  }
+
+  async postUser(ctx: Router.IRouterContext) {
+    this.setCorsHeaders(ctx);
+    const user: User = ctx.request.body.user;
+    console.log(user);
+  }
+
+  getMilitaryUnits(ctx: Router.IRouterContext) {
+    this.setCorsHeaders(ctx);
+    ctx.response.body = {units: MILITARY_UNITS};
   }
 }

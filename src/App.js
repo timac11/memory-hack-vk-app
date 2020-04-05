@@ -35,9 +35,9 @@ const App = () => {
 
 	return (
 		<View activePanel={activePanel} popout={popout}>
-			<Info id='home' fetchedUser={fetchedUser} go={go} />
-			<Result id='result' go={go} />
-			<MapResults id='mapResults' go={go}/>
+			<Info id='home' go={go} userId={fetchedUser && fetchedUser.id}/>
+			<Result id='result' go={go} userId={fetchedUser && fetchedUser.id}/>
+			<MapResults id='mapResults' go={go} userId={fetchedUser && fetchedUser.id}/>
 		</View>
 	);
 }
